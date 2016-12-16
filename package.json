@@ -1,0 +1,7 @@
+{
+    "name": "phpsqlite",
+    "version": "0.0.1",
+    "description": "Sample webapp based on PHP and SQLite",
+    "author": "Robin Löffel (robinloeffel.ch) <hi@robinloeffel.ch>",
+    "license": "MIT"
+}
