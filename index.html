@@ -3,14 +3,18 @@
     <head>
         <meta charset="utf-8">
         <title>phpsqlite</title>
+        <script src="vue.js" charset="utf-8"></script>
+        <script src="vue-resource.js" charset="utf-8"></script>
     </head>
     <body>
-        <form action="getEntries.php" method="post">
-            <input type="submit" value="Einträge holen">
-        </form>
-        
-        <form action="pushEntry.php" method="post">
-            <input type="submit" value="Eintrag schreiben">
-        </form>
+        <main>
+            <button @click="loadNames()">laden</button>
+
+            <pre v-for="name in names">
+                {{ name }}
+            </pre>
+        </main>
+
+        <script src="script.js" charset="utf-8"></script>
     </body>
 </html>
