@@ -3,18 +3,35 @@
     <head>
         <meta charset="utf-8">
         <title>phpsqlite</title>
-        <script src="vue.js" charset="utf-8"></script>
-        <script src="vue-resource.js" charset="utf-8"></script>
+        <style media="screen">
+            [v-cloak] {
+                display: none !important;
+            }
+
+            html {
+                font-family: sans-serif;
+                font-size: 18px;
+                line-height: 1.7;
+                color: #404040;
+            }
+        </style>
     </head>
     <body>
         <main>
             <button @click="loadNames()">laden</button>
+            <input type="text" placeholder="name" v-model="input.name">
+            <input type="text" placeholder="first" v-model="input.first">
+            <input type="text" placeholder="second" v-model="input.second">
+            <button @click="addName()">hinzufügen</button>
+            <button @click="deleteNames()">alles löschen</button>
 
-            <pre v-for="name in names">
-                {{ name }}
-            </pre>
+            <p v-for="name in names" v-cloak>
+                {{ `${name.name} ist ${name.first} und ${name.second}` }}
+            </p>
         </main>
 
-        <script src="script.js" charset="utf-8"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.3/axios.min.js" charset="utf-8"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.9/vue.min.js" charset="utf-8"></script>
+        <script src="./script.js" charset="utf-8"></script>
     </body>
 </html>

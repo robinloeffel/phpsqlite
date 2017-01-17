@@ -3,6 +3,7 @@
     "node": true,
     "browser": true,
     "globals": {
-        "Vue": true
+        "Vue": true,
+        "axios": true
     }
 }

@@ -16,17 +16,23 @@
     }
 
     if ($reqMethod == 'POST') {
-        // todo: adapt to rest
-        //
-        // $query = 'insert into names values (null, "michaela", "äuäää", "glöibig", "chli hingedrii", "no hübsch", "glöibig")';
-        // $db->query($query);
-        //
-        // $query = 'select name from names order by id desc limit 1';
-        // $result = $db->query($query);
-        //
-        // echo $result->fetchArray(SQLITE3_ASSOC)['name'] . ' hinzugefügt';
+        $rawPost = json_decode(file_get_contents('php://input'));
 
-        echo 'post';
+        $name = SQLite3::escapeString($rawPost->name);
+        $first = SQLite3::escapeString($rawPost->first);
+        $second = SQLite3::escapeString($rawPost->second);
+        $third = 'lär';
+        $fourth = 'lär';
+        $fifth = 'lär';
+
+        $query = "insert into names values (null, '{$name}', '{$first}', '{$second}', '{$third}', '{$fourth}', '{$fifth}')";
+        $db->query($query) or die('no');
+
+        $query = 'select * from names order by id desc limit 1';
+        $result = $db->query($query);
+
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($result->fetchArray(SQLITE3_ASSOC));
     }
 
     if ($reqMethod == 'PUT') {
@@ -34,6 +40,15 @@
     }
 
     if ($reqMethod == 'DELETE') {
-        echo 'delete';
+        $query = 'delete from names';
+        $result = $db->query($query);
+        $resultArray = array();
+
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            array_push($resultArray, $row);
+        }
+
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($resultArray);
     }
 ?>
