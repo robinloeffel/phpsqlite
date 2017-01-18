@@ -18,7 +18,7 @@ Vue.create({
             axios.get(link).then(function(response) {
                 vm.names = response.data;
             }).catch(function(error) {
-                console.log(error.message);
+                console.log(error.response.data);
             });
         },
 
@@ -30,10 +30,10 @@ Vue.create({
                 first: vm.input.first,
                 second: vm.input.second
             }).then(function(response) {
-                vm.names = vm.names.concat(response.data);
+                vm.loadNames();
                 vm.input = {};
             }).catch(function(error) {
-                console.log(error.message);
+                console.log(error.response.data);
             });
         },
 
@@ -43,7 +43,7 @@ Vue.create({
             axios.delete(link).then(function(response) {
                 vm.names = [];
             }).catch(function(error) {
-                console.log(error.message);
+                console.log(error.response.data);
             });
         },
 
@@ -53,7 +53,7 @@ Vue.create({
             axios.delete(link).then(function(response) {
                 vm.loadNames();
             }).catch(function(error) {
-                console.log(error.message);
+                console.log(error.response.data);
             });
         },
 
@@ -66,7 +66,7 @@ Vue.create({
                 vm.input.putId = '';
                 vm.loadNames();
             }).catch(function(error) {
-                console.log(error.message);
+                console.log(error.response.data);
             });
         }
     }
