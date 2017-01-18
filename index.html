@@ -23,10 +23,14 @@
             <input type="text" placeholder="first" v-model="input.first">
             <input type="text" placeholder="second" v-model="input.second">
             <button @click="addName()">hinzufügen</button>
-            <button @click="deleteNames()">alles löschen</button>
+            <input type="text" placeholder="id" v-model="input.putId">
+            <button @click="updateName()">name = broseph</button>
+            <input type="text" placeholder="id" v-model="input.deleteId">
+            <button @click="deleteName()">löschen</button>
+            <button @click="deleteNames()">alle</button>
 
             <p v-for="name in names" v-cloak>
-                {{ `${name.name} ist ${name.first} und ${name.second}` }}
+                {{ `${name.name} ist ${name.first} und ${name.second} - ${name.id}` }}
             </p>
         </main>
 
