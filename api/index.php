@@ -34,15 +34,15 @@
                 exit();
             }
 
-            $name = SQLite3::escapeString($rawData->name);
-            $first = SQLite3::escapeString($rawData->first);
-            $second = SQLite3::escapeString($rawData->second);
-            $third = 'lär';
-            $fourth = 'lär';
-            $fifth = 'lär';
-            $query = "insert into names values (null, '{$name}', '{$first}', '{$second}', '{$third}', '{$fourth}', '{$fifth}')";
+            $stmt = $db->prepare('insert into names values (null, :name, :first, :second, :third, :fourth, :fifth)');
+            $stmt->bindValue(':name', $rawData->name, SQLITE3_TEXT);
+            $stmt->bindValue(':first', $rawData->first, SQLITE3_TEXT);
+            $stmt->bindValue(':second', $rawData->second, SQLITE3_TEXT);
+            $stmt->bindValue(':third', '', SQLITE3_TEXT);
+            $stmt->bindValue(':fourth','', SQLITE3_TEXT);
+            $stmt->bindValue(':fifth', '', SQLITE3_TEXT);
 
-            if (!$db->exec($query)) {
+            if (!$stmt->execute()) {
                 http_response_code(400);
                 echo 'an error uccured while adding your data, make sure your data is formatted correctly';
                 exit();
@@ -66,10 +66,12 @@
         if (preg_match('/\/api\/names\/\d+$/i', $reqUri)) {
             preg_match('/\d+$/', $reqUri, $id);
             $rawData = json_decode(file_get_contents('php://input'));
-            $name = SQLite3::escapeString($rawData->name);
-            $query = "update names set name = '{$name}' where id = {$id[0]}";
 
-            if (!$db->exec($query)) {
+            $stmt = $db->prepare('update names set name = :name where id = :id');
+            $stmt->bindValue(':name', $rawData->name, SQLITE3_TEXT);
+            $stmt->bindValue(':id', $id[0], SQLITE3_INTEGER);
+
+            if (!$stmt->execute()) {
                 http_response_code(400);
                 echo 'an error uccured while updating your data, make sure your data is formatted correctly';
                 exit();
@@ -94,9 +96,11 @@
 
         if (preg_match('/\/api\/names\/\d+$/i', $reqUri)) {
             preg_match('/\d+$/', $reqUri, $id);
-            $query = "delete from names where id = {$id[0]}";
 
-            if (!$db->exec($query)) {
+            $stmt = $db->prepare('delete from names where id = :id');
+            $stmt->bindValue(':id', $id[0], SQLITE3_INTEGER);
+
+            if (!$stmt->execute()) {
                 http_response_code(400);
                 echo 'an error uccured while deleting your data, make sure your data is formatted correctly';
                 exit();
