@@ -8,7 +8,7 @@ let gulp = require('gulp'),
     concat = require('gulp-concat'),
     connect = require('gulp-connect-php'),
     livereload = require('gulp-livereload'),
-    devEnv = process.env.NODE_ENV === 'dev';
+    devEnv = process.argv[2] === '--dev' || process.argv[3] === '--dev';
 
 gulp.task('clean', () => {
     return del('dist/');

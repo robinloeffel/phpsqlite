@@ -5,8 +5,8 @@
     "author": "Robin Löffel (robinloeffel.ch) <hi@robinloeffel.ch>",
     "license": "MIT",
     "scripts": {
-        "start": "NODE_ENV=dev gulp",
-        "dist": "NODE_ENV=prod gulp build"
+        "start": "gulp --dev",
+        "dist": "gulp build"
     },
     "devDependencies": {
         "del": "^2.2.2",
