@@ -22,7 +22,7 @@ Vue.create({
             });
         },
 
-        addName: function(link = './api/names/add') {
+        addName: function(link = './api/names') {
             let vm = this;
 
             axios.post(link, {
@@ -37,7 +37,7 @@ Vue.create({
             });
         },
 
-        deleteNames: function(link = './api/names/delete') {
+        deleteNames: function(link = './api/names') {
             let vm = this;
 
             axios.delete(link).then(function(response) {
@@ -47,7 +47,7 @@ Vue.create({
             });
         },
 
-        deleteName: function(link = './api/names/delete/' + this.input.deleteId) {
+        deleteName: function(link = './api/names/' + this.input.deleteId) {
             let vm = this;
 
             axios.delete(link).then(function(response) {
@@ -57,7 +57,7 @@ Vue.create({
             });
         },
 
-        updateName: function(link = './api/names/update/' + this.input.putId) {
+        updateName: function(link = './api/names/' + this.input.putId) {
             let vm = this;
 
             axios.put(link, {
@@ -69,5 +69,8 @@ Vue.create({
                 console.log(error.response.data);
             });
         }
+    },
+    mounted: function() {
+        this.loadNames();
     }
 });

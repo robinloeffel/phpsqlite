@@ -1,7 +1,7 @@
 <?php
     $reqMethod = $_SERVER['REQUEST_METHOD'];
     $reqUri = $_SERVER['REQUEST_URI'];
-    $db = new SQLite3('database.sqlite');
+    $db = new SQLite3('names.db');
 
     if ($reqMethod == 'GET') {
         if (preg_match('/\/api\/names$/i', $reqUri)) {
@@ -25,7 +25,7 @@
     }
 
     if ($reqMethod == 'POST') {
-        if (preg_match('/\/api\/names\/add$/i', $reqUri)) {
+        if (preg_match('/\/api\/names$/i', $reqUri)) {
             $rawData = json_decode(file_get_contents('php://input'));
 
             if (count((array)$rawData) !== 3) {
@@ -63,7 +63,7 @@
     }
 
     if ($reqMethod == 'PUT') {
-        if (preg_match('/\/api\/names\/update\/\d+$/i', $reqUri)) {
+        if (preg_match('/\/api\/names\/\d+$/i', $reqUri)) {
             preg_match('/\d+$/', $reqUri, $id);
             $rawData = json_decode(file_get_contents('php://input'));
             $name = SQLite3::escapeString($rawData->name);
@@ -85,14 +85,14 @@
     }
 
     if ($reqMethod == 'DELETE') {
-        if (preg_match('/\/api\/names\/delete$/i', $reqUri)) {
+        if (preg_match('/\/api\/names$/i', $reqUri)) {
             $query = 'delete from names';
             $result = $db->exec($query);
             http_response_code(204);
             exit();
         }
 
-        if (preg_match('/\/api\/names\/delete\/\d+$/i', $reqUri)) {
+        if (preg_match('/\/api\/names\/\d+$/i', $reqUri)) {
             preg_match('/\d+$/', $reqUri, $id);
             $query = "delete from names where id = {$id[0]}";
 
