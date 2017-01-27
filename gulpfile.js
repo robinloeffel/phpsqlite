@@ -14,7 +14,7 @@ let gulp = require('gulp'),
     cleanCss = require('gulp-clean-css'),
     babel = require('gulp-babel'),
     jshint = require('gulp-jshint'),
-    devEnv = process.argv[2] === '--dev' || process.argv[3] === '--dev';
+    devEnv = process.argv.indexOf('--dev') > -1;
 
 gulp.task('clean', () => {
     return del('dist/');
