@@ -1,6 +1,7 @@
 let gulp = require('gulp'),
     del = require('del'),
     runSequence = require('run-sequence'),
+    stylish = require('jshint-stylish'),
     changed = require('gulp-changed'),
     plumber = require('gulp-plumber'),
     sass = require('gulp-sass'),
@@ -8,6 +9,11 @@ let gulp = require('gulp'),
     concat = require('gulp-concat'),
     connect = require('gulp-connect-php'),
     livereload = require('gulp-livereload'),
+    sourcemaps = require('gulp-sourcemaps'),
+    gulpIf = require('gulp-if'),
+    cleanCss = require('gulp-clean-css'),
+    babel = require('gulp-babel'),
+    jshint = require('gulp-jshint'),
     devEnv = process.argv[2] === '--dev' || process.argv[3] === '--dev';
 
 gulp.task('clean', () => {
@@ -27,9 +33,12 @@ gulp.task('sass', () => {
             extension: '.css'
         }))
         .pipe(plumber())
+        .pipe(gulpIf(devEnv, sourcemaps.init()))
         .pipe(sass.sync({
             outputStyle: 'expanded'
         }))
+        .pipe(gulpIf(!devEnv, cleanCss()))
+        .pipe(gulpIf(devEnv, sourcemaps.write('.')))
         .pipe(gulp.dest('./dist/css/'))
         .pipe(livereload());
 });
@@ -38,6 +47,12 @@ gulp.task('js', () => {
     return gulp.src('./src/js/*.js')
         .pipe(changed('./dist/js/'))
         .pipe(plumber())
+        .pipe(jshint())
+        .pipe(jshint.reporter(stylish))
+        .pipe(gulpIf(devEnv, sourcemaps.init()))
+        .pipe(babel())
+        .pipe(gulpIf(!devEnv, uglify()))
+        .pipe(gulpIf(devEnv, sourcemaps.write('.')))
         .pipe(gulp.dest('./dist/js/'));
 });
 
@@ -54,11 +69,17 @@ gulp.task('copy', () => {
 });
 
 gulp.task('vendor', () => {
-    return gulp.src([
-            './node_modules/axios/dist/axios.min.js',
-            './node_modules/vue/dist/vue.min.js'
-        ])
+    let srcConfig = devEnv ? [
+        './node_modules/axios/dist/axios.js',
+        './node_modules/vue/dist/vue.js'
+    ] : [
+        './node_modules/axios/dist/axios.min.js',
+        './node_modules/vue/dist/vue.min.js'
+    ];
+
+    return gulp.src(srcConfig)
         .pipe(concat('vendor.js'))
+        .pipe(gulpIf(!devEnv, uglify()))
         .pipe(gulp.dest('./dist/js/'));
 });
 
