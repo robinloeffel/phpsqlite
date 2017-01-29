@@ -1,10 +1,10 @@
 <?php
-    $reqMethod = $_SERVER['REQUEST_METHOD'];
-    $reqUri = $_SERVER['REQUEST_URI'];
+    require_once 'Request.php';
+    $request = new Request($_SERVER);
     $db = new SQLite3('names.db');
 
-    if ($reqMethod == 'GET') {
-        if (preg_match('/\/api\/names$/i', $reqUri)) {
+    if ($request->isMethod('get')) {
+        if ($request->isAction('/api/names')) {
             $query = 'select * from names';
             $result = $db->query($query);
             $resultArray = [];
@@ -20,24 +20,16 @@
         }
 
         http_response_code(501);
-        echo "unknown method {$reqUri}";
+        echo 'unknown action ' . $request->getUri();
         exit();
     }
 
-    if ($reqMethod == 'POST') {
-        if (preg_match('/\/api\/names$/i', $reqUri)) {
-            $rawData = json_decode(file_get_contents('php://input'));
-
-            if (count((array)$rawData) !== 3) {
-                http_response_code(400);
-                echo 'not all required arguments passed';
-                exit();
-            }
-
+    if ($request->isMethod('post')) {
+        if ($request->isAction('/api/names')) {
             $stmt = $db->prepare('insert into names values (null, :name, :first, :second, :third, :fourth, :fifth)');
-            $stmt->bindValue(':name', $rawData->name, SQLITE3_TEXT);
-            $stmt->bindValue(':first', $rawData->first, SQLITE3_TEXT);
-            $stmt->bindValue(':second', $rawData->second, SQLITE3_TEXT);
+            $stmt->bindValue(':name', $request->getData()->name, SQLITE3_TEXT);
+            $stmt->bindValue(':first', $request->getData()->first, SQLITE3_TEXT);
+            $stmt->bindValue(':second', $request->getData()->second, SQLITE3_TEXT);
             $stmt->bindValue(':third', '', SQLITE3_TEXT);
             $stmt->bindValue(':fourth','', SQLITE3_TEXT);
             $stmt->bindValue(':fifth', '', SQLITE3_TEXT);
@@ -58,22 +50,19 @@
         }
 
         http_response_code(501);
-        echo "unknown method {$reqUri}";
+        echo 'unknown action ' . $request->getUri();
         exit();
     }
 
-    if ($reqMethod == 'PUT') {
-        if (preg_match('/\/api\/names\/\d+$/i', $reqUri)) {
-            preg_match('/\d+$/', $reqUri, $id);
-            $rawData = json_decode(file_get_contents('php://input'));
-
+    if ($request->isMethod('put')) {
+        if ($request->isAction('/api/names/:id')) {
             $stmt = $db->prepare('update names set name = :name where id = :id');
-            $stmt->bindValue(':name', $rawData->name, SQLITE3_TEXT);
-            $stmt->bindValue(':id', $id[0], SQLITE3_INTEGER);
+            $stmt->bindValue(':name', $request->getData()->name, SQLITE3_TEXT);
+            $stmt->bindValue(':id', $request->getId(), SQLITE3_INTEGER);
 
             if (!$stmt->execute()) {
                 http_response_code(400);
-                echo 'an error uccured while updating your data, make sure your data is formatted correctly';
+                echo 'an error uccured while updating your data, make sure it is formatted correctly';
                 exit();
             }
 
@@ -82,23 +71,21 @@
         }
 
         http_response_code(501);
-        echo "unknown method {$reqUri}";
+        echo 'unknown action ' . $request->getUri();
         exit();
     }
 
-    if ($reqMethod == 'DELETE') {
-        if (preg_match('/\/api\/names$/i', $reqUri)) {
+    if ($request->isMethod('delete')) {
+        if ($request->isAction('/api/names')) {
             $query = 'delete from names';
             $result = $db->exec($query);
             http_response_code(204);
             exit();
         }
 
-        if (preg_match('/\/api\/names\/\d+$/i', $reqUri)) {
-            preg_match('/\d+$/', $reqUri, $id);
-
+        if ($request->isAction('/api/names/:id')) {
             $stmt = $db->prepare('delete from names where id = :id');
-            $stmt->bindValue(':id', $id[0], SQLITE3_INTEGER);
+            $stmt->bindValue(':id', $request->getId(), SQLITE3_INTEGER);
 
             if (!$stmt->execute()) {
                 http_response_code(400);
@@ -111,11 +98,11 @@
         }
 
         http_response_code(501);
-        echo "unknown method {$reqUri}";
+        echo 'unknown action ' . $request->getUri();
         exit();
     }
 
     http_response_code(501);
-    echo "unknown request type {$reqMethod}";
+    echo 'unknown method ' . $request->getMethod();
     exit();
 ?>
