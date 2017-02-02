@@ -2,6 +2,7 @@ let gulp = require('gulp'),
     del = require('del'),
     runSequence = require('run-sequence'),
     stylish = require('jshint-stylish'),
+    nodeOpen = require('open'),
     changed = require('gulp-changed'),
     plumber = require('gulp-plumber'),
     sass = require('gulp-sass'),
@@ -25,6 +26,10 @@ gulp.task('serve', () => {
         port: 8080,
         base: 'dist/'
     });
+});
+
+gulp.task('open', () => {
+    return nodeOpen('http://localhost:8080');
 });
 
 gulp.task('sass', () => {
@@ -92,7 +97,7 @@ gulp.task('watch', () => {
 });
 
 gulp.task('default', (callback) => {
-    runSequence('clean', 'build', 'serve', 'watch', callback);
+    runSequence('clean', 'build', 'open', 'serve', 'watch', callback);
 });
 
 gulp.task('build', (callback) => {
