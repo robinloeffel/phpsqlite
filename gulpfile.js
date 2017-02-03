@@ -63,6 +63,7 @@ gulp.task('js', () => {
 
 gulp.task('api', () => {
     return gulp.src('./api/*')
+        .pipe(changed('./dist/api/'))
         .pipe(gulp.dest('./dist/api/'));
 });
 
@@ -70,6 +71,7 @@ gulp.task('copy', () => {
     return gulp.src([
             './src/index.html'
         ])
+        .pipe(changed('./dist/'))
         .pipe(gulp.dest('./dist/'));
 });
 

@@ -22,18 +22,6 @@
             return $this->data;
         }
 
-        public function setMethod(string $value) {
-            return $this->method = $value;
-        }
-
-        public function setUri(string $value) {
-            return $this->uri = $value;
-        }
-
-        public function setData(array $value) {
-            return $this->data = $value;
-        }
-
         public function isMethod(string $method) {
             return strcasecmp($this->method, $method) === 0;
         }

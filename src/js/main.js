@@ -51,6 +51,7 @@ Vue.create({
             let vm = this;
 
             axios.delete(link).then(function(response) {
+                vm.input.deleteId = '';
                 vm.loadNames();
             }).catch(function(error) {
                 console.log(error.response.data);
