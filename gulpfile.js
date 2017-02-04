@@ -58,13 +58,15 @@ gulp.task('js', () => {
         .pipe(babel())
         .pipe(gulpIf(!devEnv, uglify()))
         .pipe(gulpIf(devEnv, sourcemaps.write('.')))
-        .pipe(gulp.dest('./dist/js/'));
+        .pipe(gulp.dest('./dist/js/'))
+        .pipe(livereload());
 });
 
 gulp.task('api', () => {
     return gulp.src('./api/*')
         .pipe(changed('./dist/api/'))
-        .pipe(gulp.dest('./dist/api/'));
+        .pipe(gulp.dest('./dist/api/'))
+        .pipe(livereload());
 });
 
 gulp.task('copy', () => {
@@ -72,7 +74,8 @@ gulp.task('copy', () => {
             './src/index.html'
         ])
         .pipe(changed('./dist/'))
-        .pipe(gulp.dest('./dist/'));
+        .pipe(gulp.dest('./dist/'))
+        .pipe(livereload());
 });
 
 gulp.task('vendor', () => {
